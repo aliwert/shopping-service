@@ -1,12 +1,13 @@
 package com.shop.shopping.service;
 
 import com.shop.shopping.model.Product;
+import com.shop.shopping.request.AddProductRequest;
 
 import java.util.List;
 
 public interface IProductService {
 
-    Product addProduct(Product product);
+    Product addProduct(AddProductRequest product);
 
     Product getProductById(Long id);
 
@@ -27,7 +28,6 @@ public interface IProductService {
     List<Product> getProductsByBrandAndName(String brand, String productName);
 
     Long countProductsByBrandAndName(String brand, String productName);
-
 
 
 }

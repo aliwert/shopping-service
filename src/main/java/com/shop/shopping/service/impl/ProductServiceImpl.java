@@ -1,24 +1,48 @@
 package com.shop.shopping.service.impl;
 
 import com.shop.shopping.exceptions.ProductNotFoundException;
+import com.shop.shopping.model.Category;
 import com.shop.shopping.model.Product;
+import com.shop.shopping.repository.CategoryRepository;
 import com.shop.shopping.repository.ProductRepository;
+import com.shop.shopping.request.AddProductRequest;
 import com.shop.shopping.service.IProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class ProductServiceImpl implements IProductService {
 
-    private ProductRepository productRepository;
+    private final ProductRepository productRepository;
+    private final CategoryRepository categoryRepository;
 
 
     @Override
-    public Product addProduct(Product product) {
-        return null;
+    public Product addProduct(AddProductRequest request) {
+
+        Category category = Optional.ofNullable(categoryRepository.findByName(request.getCategory().getName()))
+                .orElseGet(() -> {
+                    Category newCategory = new Category(request.getCategory().getName());
+                    return categoryRepository.save(newCategory);
+                });
+        request.setCategory(category);
+        return productRepository.save(createProduct(request, category));
+        
+    }
+
+    private Product createProduct(AddProductRequest request, Category category) {
+        return new Product(
+                request.getName(),
+                request.getBrand(),
+                request.getInventory(),
+                request.getDescription(),
+                category,
+                request.getPrice()
+        );
     }
 
     @Override
