@@ -2,6 +2,7 @@ package com.shop.shopping.service;
 
 import com.shop.shopping.model.Product;
 import com.shop.shopping.request.AddProductRequest;
+import com.shop.shopping.request.ProductUpdateRequest;
 
 import java.util.List;
 
@@ -13,7 +14,7 @@ public interface IProductService {
 
     void deleteProductById(Long id);
 
-    void updateProduct(Product product, Long productId);
+    Product updateProduct(ProductUpdateRequest request, Long productId);
 
     List<Product> getAllProducts();
 
