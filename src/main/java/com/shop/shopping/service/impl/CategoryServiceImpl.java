@@ -1,5 +1,6 @@
 package com.shop.shopping.service.impl;
 
+import com.shop.shopping.exceptions.AlreadyExistException;
 import com.shop.shopping.exceptions.ResourceNotFoundException;
 import com.shop.shopping.model.Category;
 import com.shop.shopping.repository.CategoryRepository;
@@ -8,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -33,12 +35,17 @@ public class CategoryServiceImpl implements ICategoryService {
 
     @Override
     public Category addCategory(Category category) {
-        return null;
+        return  Optional.of(category).filter(c -> !categoryRepository.existsByName(c.getName()))
+                .map(categoryRepository :: save).orElseThrow(() -> new AlreadyExistException(category.getName()+ " Already exist"));
     }
 
     @Override
-    public Category updateCategory(Category category) {
-        return null;
+    public Category updateCategory(Category category, Long id) {
+        return Optional.ofNullable(getCategoryById(id))
+                .map(oldCategory -> {
+                    oldCategory.setName(category.getName());
+                    return categoryRepository.save(oldCategory);
+                }).orElseThrow(() -> new ResourceNotFoundException("Category not found"));
     }
 
     @Override
