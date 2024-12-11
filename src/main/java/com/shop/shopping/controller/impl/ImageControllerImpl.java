@@ -19,6 +19,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.sql.SQLException;
 import java.util.List;
 
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("${api.prefix}/images")
@@ -30,9 +32,9 @@ public class ImageControllerImpl {
     public ResponseEntity<ApiResponse> saveImages(@RequestParam List<MultipartFile> files, @RequestParam Long productId) {
         try {
             List<ImageDto> imageDtos = imageService.saveImages(files, productId);
-            return ResponseEntity.ok(new ApiResponse("Upload succes", imageDtos));
+            return ResponseEntity.ok(new ApiResponse("Upload success", imageDtos));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse("Upload failed", e.getMessage()));
+            return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ApiResponse("Upload failed", e.getMessage()));
         }
 
     }
@@ -55,12 +57,12 @@ public class ImageControllerImpl {
             Image image = imageService.getImageById(imageId);
             if (image != null) {
                 imageService.updateImage(file, imageId);
-                return ResponseEntity.ok(new ApiResponse("Update succes", null));
+                return ResponseEntity.ok(new ApiResponse("Update success", null));
             }
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse("Update failed", e.getMessage()));
         }
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse("Update failed", null));
+        return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ApiResponse("Update failed", null));
     }
 
     @DeleteMapping("/image/{imageId}/delete")
@@ -69,12 +71,12 @@ public class ImageControllerImpl {
             Image image = imageService.getImageById(imageId);
             if (image != null) {
                 imageService.deleteImageById(imageId);
-                return ResponseEntity.ok(new ApiResponse("Delete succes", null));
+                return ResponseEntity.ok(new ApiResponse("Delete success", null));
             }
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse("Delete failed", e.getMessage()));
         }
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse("Delete failed", null));
+        return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ApiResponse("Delete failed", null));
     }
 
 
