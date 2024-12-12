@@ -109,5 +109,31 @@ public class ProductControllerImpl {
         }
     }
 
+    @GetMapping("/product/by-brand")
+    public ResponseEntity<ApiResponse> findProductByBrand(@RequestParam String brand) {
+        try {
+            List<Product> products = productService.getAllProductsByBrand(brand);
+            if (products.isEmpty()) {
+                return ResponseEntity.status(NOT_FOUND).body(new ApiResponse("No products found", null));
+            }
+            return ResponseEntity.ok(new ApiResponse("Success", products));
+        } catch (Exception e) {
+            return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ApiResponse(e.getMessage(), null));
+        }
+    }
+
+    @GetMapping("/product/{category}/all/products")
+    public ResponseEntity<ApiResponse> findProductByCategory(@RequestParam String category) {
+        try {
+            List<Product> products = productService.getAllProductsByCategory(category);
+            if (products.isEmpty()) {
+                return ResponseEntity.status(NOT_FOUND).body(new ApiResponse("No products found", null));
+            }
+            return ResponseEntity.ok(new ApiResponse("Success", products));
+        } catch (Exception e) {
+            return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ApiResponse(e.getMessage(), null));
+        }
+    }
+
 
 }
